@@ -19,6 +19,9 @@ Arcade Vault: plataforma para jugar minijuegos online y competir por puntaje ("S
 
 No hay suite de tests configurada todavía.
 
+## Skills
+usa siempre /frontend-design` para diseñar componentes o pantallas.
+
 ## Spec Driven Design
 
 El proyecto sigue el flujo de `/spec` y `/spec-impl` basado en https://github.com/Klerith/fernando-skills (instalable con `npx skills@latest add Klerith/fernando-skills`). Antes de implementar features grandes, prioriza ese flujo de specs si los skills están disponibles.
