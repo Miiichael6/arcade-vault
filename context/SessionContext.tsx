@@ -1,6 +1,6 @@
 "use client";
 
-import { createContext, useContext, useEffect, useState, type ReactNode } from "react";
+import { createContext, useContext, useSyncExternalStore, type ReactNode } from "react";
 
 export interface SessionUser {
   name: string;
@@ -14,25 +14,40 @@ export interface Session {
 
 const SessionContext = createContext<Session | null>(null);
 
-export function SessionProvider({ children }: { children: ReactNode }) {
-  const [user, setUser] = useState<SessionUser | null>(null);
+const listeners = new Set<() => void>();
 
-  useEffect(() => {
-    try {
-      setUser(JSON.parse(localStorage.getItem("av_user") || "null"));
-    } catch {
-      setUser(null);
-    }
-  }, []);
+function subscribe(callback: () => void) {
+  listeners.add(callback);
+  return () => listeners.delete(callback);
+}
+
+function notify() {
+  listeners.forEach((callback) => callback());
+}
+
+function getSnapshot(): SessionUser | null {
+  try {
+    return JSON.parse(localStorage.getItem("av_user") || "null");
+  } catch {
+    return null;
+  }
+}
+
+function getServerSnapshot(): SessionUser | null {
+  return null;
+}
+
+export function SessionProvider({ children }: { children: ReactNode }) {
+  const user = useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot);
 
   const login = (nextUser: SessionUser | null) => {
-    setUser(nextUser);
     localStorage.setItem("av_user", JSON.stringify(nextUser));
+    notify();
   };
 
   const logout = () => {
-    setUser(null);
     localStorage.removeItem("av_user");
+    notify();
   };
 
   return (
