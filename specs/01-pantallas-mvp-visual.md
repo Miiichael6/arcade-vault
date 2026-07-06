@@ -1,6 +1,6 @@
 # Spec 01 — Pantallas del MVP (solo visual)
 
-**Estado:** Aprobado
+**Estado:** Implemented
 **Dependencias:** Ninguna (primer spec del proyecto)
 **Fecha:** 2026-07-01
 
